@@ -87,7 +87,7 @@ def new_member(update, context):
 I'm a bot to help members of potato castle not miss orders when they are sent
 Use the command /opt_in to get a DM whenever orders are posted!''')
 
-
+print('bot starting')
 updater = Updater(os.getenv('BOT_TOKEN'), persistence=PicklePersistence(filename='data/bot_data.pkl'))
 updater.dispatcher.add_handler(MessageHandler(Filters.status_update.pinned_message, on_message))
 updater.dispatcher.add_handler(MessageHandler(Filters.status_update.new_chat_members, new_member))
