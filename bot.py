@@ -1,10 +1,14 @@
+import logging
 import os
 import random
+from logging import debug
 
 import telegram
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, CallbackContext, MessageHandler, Filters, PicklePersistence
 
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 def opt_in(update: Update, context: CallbackContext) -> None:
     send_start = InlineKeyboardMarkup(
@@ -38,9 +42,9 @@ def start(update: Update, context: CallbackContext) -> None:
 
 
 def on_message(update: Update, context: CallbackContext) -> None:
-    print('pinned message')
-    print(update)
-    print(update.effective_user)
+    debug('pinned message')
+    debug(update)
+    debug(update.effective_user)
     if update.effective_user.username.lower() == 'PotatoOrderBot'.lower():
         send_start = InlineKeyboardMarkup(
             [[InlineKeyboardButton(url=f'https://t.me/{context.bot.username}?start=1', text='/start')]])
@@ -87,7 +91,8 @@ def new_member(update, context):
 I'm a bot to help members of potato castle not miss orders when they are sent
 Use the command /opt_in to get a DM whenever orders are posted!''')
 
-print('bot starting')
+
+debug('bot starting')
 updater = Updater(os.getenv('BOT_TOKEN'), persistence=PicklePersistence(filename='data/bot_data.pkl'))
 updater.dispatcher.add_handler(MessageHandler(Filters.status_update.pinned_message, on_message))
 updater.dispatcher.add_handler(MessageHandler(Filters.status_update.new_chat_members, new_member))
