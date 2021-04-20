@@ -38,43 +38,43 @@ def start(update: Update, context: CallbackContext) -> None:
 
 
 def on_message(update: Update, context: CallbackContext) -> None:
-    print('new message')
-    send_start = InlineKeyboardMarkup(
-        [[InlineKeyboardButton(url=f'https://t.me/{context.bot.username}?start=1', text='/start')]])
-    for user in context.chat_data:
-        try:
-            member = update.effective_chat.get_member(user_id=user)
-        except telegram.error.BadRequest:
-            update.effective_chat.send_message(
-                f'An error occured fetching details for a user (ID {user}) - they have been opted out'
-            )
-            context.chat_data.pop(user)
-            break
-        if member.status in ['restricted', 'left', 'kicked']:
-            update.effective_chat.send_message(
-                f'{member.user.name} will no longer be notified of orders due to `{member.status}` status'
-            )
-            context.chat_data.pop(user)
-            break
-        try:
-            if user == 355953948: # Ziah
-                context.bot.send_message(chat_id=user, text=random.choice([
-                    'Nya!! 😳😳 Orders have been posted',
-                    'H-he-hewwo?? owdews hawe beewn powsted UwU 👉👈💜💜💜💜💜',
-                    '👉👈 Heyyyyy haha 😳😳😳 the orders just got posted 🥺🥺🥺🥺🥺🥺',
-                    'Hiiiiiiiiiiiiii 👉👈 you should check guild chat for the order',
-                    '👉👈 Orders posted, uwu 🥺',
-                    'raWr x3 orders posted 🏳️‍⚧️:3',
-                    '🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺 orders are in 😳😳',
-                    '(„ᵕᴗᵕ„) orders are waiting (◡ w ◡)'
-                    '(⁄ʘ⁄ ⁄ ω⁄ ⁄ ʘ⁄)♡ just stopping by to say new orders are in ‿︵*𝓇𝒶𝓌𝓇*‿︵ ʘwʘ']))
-            else:
-                context.bot.send_message(chat_id=user, text='🔔Orders posted!')
-        except telegram.error.Unauthorized:
-            update.effective_chat.send_message(
-                f'{member.user.name}: I was unable to send you a notification DM for orders,\
-                 can you please click the button below to allow me to send you messages?'
-                f'\nIf you wish to opt out of order notifications please send /opt_out', reply_markup=send_start)
+    if update.effective_user.username == 'PotatoOrderBot':
+        send_start = InlineKeyboardMarkup(
+            [[InlineKeyboardButton(url=f'https://t.me/{context.bot.username}?start=1', text='/start')]])
+        for user in context.chat_data:
+            try:
+                member = update.effective_chat.get_member(user_id=user)
+            except telegram.error.BadRequest:
+                update.effective_chat.send_message(
+                    f'An error occured fetching details for a user (ID {user}) - they have been opted out'
+                )
+                context.chat_data.pop(user)
+                break
+            if member.status in ['restricted', 'left', 'kicked']:
+                update.effective_chat.send_message(
+                    f'{member.user.name} will no longer be notified of orders due to `{member.status}` status'
+                )
+                context.chat_data.pop(user)
+                break
+            try:
+                if user == 355953948: # Ziah
+                    context.bot.send_message(chat_id=user, text=random.choice([
+                        'Nya!! 😳😳 Orders have been posted',
+                        'H-he-hewwo?? owdews hawe beewn powsted UwU 👉👈💜💜💜💜💜',
+                        '👉👈 Heyyyyy haha 😳😳😳 the orders just got posted 🥺🥺🥺🥺🥺🥺',
+                        'Hiiiiiiiiiiiiii 👉👈 you should check guild chat for the order',
+                        '👉👈 Orders posted, uwu 🥺',
+                        'raWr x3 orders posted 🏳️‍⚧️:3',
+                        '🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺 orders are in 😳😳',
+                        '(„ᵕᴗᵕ„) orders are waiting (◡ w ◡)'
+                        '(⁄ʘ⁄ ⁄ ω⁄ ⁄ ʘ⁄)♡ just stopping by to say new orders are in ‿︵*𝓇𝒶𝓌𝓇*‿︵ ʘwʘ']))
+                else:
+                    context.bot.send_message(chat_id=user, text='🔔Orders posted!')
+            except telegram.error.Unauthorized:
+                update.effective_chat.send_message(
+                    f'{member.user.name}: I was unable to send you a notification DM for orders,\
+                     can you please click the button below to allow me to send you messages?'
+                    f'\nIf you wish to opt out of order notifications please send /opt_out', reply_markup=send_start)
 
 
 def new_member(update, context):
@@ -86,7 +86,7 @@ Use the command /opt_in to get a DM whenever orders are posted!''')
 
 
 updater = Updater(os.getenv('BOT_TOKEN'), persistence=PicklePersistence(filename='data/bot_data.pkl'))
-updater.dispatcher.add_handler(MessageHandler(Filters.user(username='PotatoOrderBot'), on_message))
+updater.dispatcher.add_handler(MessageHandler(Filters.status_update.pinned_message, on_message))
 updater.dispatcher.add_handler(MessageHandler(Filters.status_update.new_chat_members, new_member))
 updater.dispatcher.add_handler(CommandHandler('opt_in', opt_in))
 updater.dispatcher.add_handler(CommandHandler('opt_out', opt_out))
