@@ -38,6 +38,7 @@ def start(update: Update, context: CallbackContext) -> None:
 
 
 def on_message(update: Update, context: CallbackContext) -> None:
+    print('new message')
     send_start = InlineKeyboardMarkup(
         [[InlineKeyboardButton(url=f'https://t.me/{context.bot.username}?start=1', text='/start')]])
     for user in context.chat_data:
@@ -73,7 +74,7 @@ def on_message(update: Update, context: CallbackContext) -> None:
             update.effective_chat.send_message(
                 f'{member.user.name}: I was unable to send you a notification DM for orders,\
                  can you please click the button below to allow me to send you messages?'
-                f'\nIf you wish to opt out of order notifications please send /opt_out')
+                f'\nIf you wish to opt out of order notifications please send /opt_out', reply_markup=send_start)
 
 
 def new_member(update, context):
@@ -85,10 +86,10 @@ Use the command /opt_in to get a DM whenever orders are posted!''')
 
 
 updater = Updater(os.getenv('BOT_TOKEN'), persistence=PicklePersistence(filename='data/bot_data.pkl'))
+updater.dispatcher.add_handler(MessageHandler(Filters.user(username='PotatoOrderBot'), on_message))
 updater.dispatcher.add_handler(MessageHandler(Filters.status_update.new_chat_members, new_member))
 updater.dispatcher.add_handler(CommandHandler('opt_in', opt_in))
 updater.dispatcher.add_handler(CommandHandler('opt_out', opt_out))
 updater.dispatcher.add_handler(MessageHandler(Filters.chat_type.private, start))
-updater.dispatcher.add_handler(MessageHandler(Filters.user(username='PotatoOrderBot'), on_message))
 updater.start_polling()
 updater.idle()
