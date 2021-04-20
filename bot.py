@@ -1,4 +1,5 @@
 import os
+import random
 
 import telegram
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
@@ -55,7 +56,19 @@ def on_message(update: Update, context: CallbackContext) -> None:
             context.chat_data.pop(user)
             break
         try:
-            context.bot.send_message(chat_id=user, text='🔔Orders posted!')
+            if user == 355953948: # Ziah
+                context.bot.send_message(chat_id=user, text=random.choice([
+                    'Nya!! 😳😳 Orders have been posted',
+                    'H-he-hewwo?? owdews hawe beewn powsted UwU 👉👈💜💜💜💜💜',
+                    '👉👈 Heyyyyy haha 😳😳😳 the orders just got posted 🥺🥺🥺🥺🥺🥺',
+                    'Hiiiiiiiiiiiiii 👉👈 you should check guild chat for the order',
+                    '👉👈 Orders posted, uwu 🥺',
+                    'raWr x3 orders posted 🏳️‍⚧️:3',
+                    '🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺🥺 orders are in 😳😳',
+                    '(„ᵕᴗᵕ„) orders are waiting (◡ w ◡)'
+                    '(⁄ʘ⁄ ⁄ ω⁄ ⁄ ʘ⁄)♡ just stopping by to say new orders are in ‿︵*𝓇𝒶𝓌𝓇*‿︵ ʘwʘ']))
+            else:
+                context.bot.send_message(chat_id=user, text='🔔Orders posted!')
         except telegram.error.Unauthorized:
             update.effective_chat.send_message(
                 f'{member.user.name}: I was unable to send you a notification DM for orders,\
