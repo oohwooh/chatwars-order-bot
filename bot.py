@@ -38,7 +38,10 @@ def start(update: Update, context: CallbackContext) -> None:
 
 
 def on_message(update: Update, context: CallbackContext) -> None:
-    if update.effective_user.username == 'PotatoOrderBot':
+    print('pinned message')
+    print(update)
+    print(update.effective_user)
+    if update.effective_user.username.lower() == 'PotatoOrderBot'.lower():
         send_start = InlineKeyboardMarkup(
             [[InlineKeyboardButton(url=f'https://t.me/{context.bot.username}?start=1', text='/start')]])
         for user in context.chat_data:
