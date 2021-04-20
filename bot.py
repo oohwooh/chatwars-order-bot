@@ -68,7 +68,7 @@ def new_member(update, context):
         if member.username == context.bot.username:
             update.message.reply_text('''Hello! 👋
 I'm a bot to help members of potato castle not miss orders when they are sent
-Send the command /opt_in to get a DM whenever orders are posted!''')
+Use the command /opt_in to get a DM whenever orders are posted!''')
 
 
 updater = Updater(os.getenv('BOT_TOKEN'), persistence=PicklePersistence(filename='data/bot_data.pkl'))
